@@ -5,6 +5,7 @@ body {
     text-align: center;
     padding: 0px;
     margin: 0px;
+    height: 100vh;
 }
 
 .layout {
@@ -282,7 +283,7 @@ textarea {
 
 @media only screen and (max-width: 1085px) {
     .content {
-        flex-flow: column wrap;
+        flex-flow: row wrap;
         justify-content: center;
         align-items: center;
     }
@@ -292,15 +293,16 @@ textarea {
     }
 
     .jumbo {
-        width: auto;
+        width: 80%;
     }
 
     .layout {
         grid-template-areas:
-            'header header'
-            'nav nav'
-            'content aside'
-            'footer footer';
+            'header '
+            'nav '
+            'content '
+            'aside'
+            'footer ';
         grid-template-columns: 1fr;
     }
 
@@ -315,5 +317,18 @@ textarea {
         width: 80px;
         height: 50px;
         margin: 0 auto;
+    }
+
+    .aside {
+        min-height: 250px;
+    }
+
+    .aside > div {
+        margin: 0 auto;
+    }
+
+    .footer {
+        margin-top: 290px;
+        grid-area: 4/ 1 / 4 / 4;
     }
 }

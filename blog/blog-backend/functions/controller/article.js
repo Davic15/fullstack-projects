@@ -4,31 +4,9 @@ const { ObjectId } = require('mongodb');
 const { validateArticle } = require('../helpers/validation');
 const Article = require('../models/article');
 
-// Fake end points
-/*const firstTry = (req, res) => {
-    return res.status(200).json({
-        mensaje: 'Soy una acción de prueba en mi controlador de artículos',
-    });
-};
-
-const course = (req, res) => {
-    console.log('Se ha ejecutado el endpoint probando');
-
-    return res.status(200).json([
-        {
-            curso: 'Master en React',
-            autor: 'Víctor Robles WEB',
-            url: 'victorroblesweb.es/master-react',
-        },
-        {
-            curso: 'Master en React',
-            autor: 'Víctor Robles WEB',
-            url: 'victorroblesweb.es/master-react',
-        },
-    ]);
-};*/
-
 // Valid end points
+
+// Create a new Post.
 const createArticle = (req, res) => {
     // Get parameters by post to save them
     let params = req.body;
@@ -68,6 +46,7 @@ const createArticle = (req, res) => {
     });
 };
 
+// List all Articles all, and with a parameter only returns 3.
 const listArticles = (req, res) => {
     let query = Article.find({});
     // Get an optional parameter to display up to 3 articles
@@ -94,6 +73,7 @@ const listArticles = (req, res) => {
     });
 };
 
+// Get a single article by ID.
 const singleArticle = (req, res) => {
     // Get the ID from the URL
     let id = new ObjectId(req.params.id);
@@ -118,6 +98,7 @@ const singleArticle = (req, res) => {
     });
 };
 
+// Delete an article by ID.
 const deleteArticle = (req, res) => {
     let articleId = new ObjectId(req.params.id);
     Article.findOneAndDelete({ _id: articleId }, (error, articleDeleted) => {
@@ -135,6 +116,7 @@ const deleteArticle = (req, res) => {
     });
 };
 
+// Edit an article by ID.
 const editArticle = (req, res) => {
     // Get the article id to modify it
     let articleId = new ObjectId(req.params.id);
@@ -173,6 +155,7 @@ const editArticle = (req, res) => {
     );
 };
 
+// Upload an Image for an article by ID (Cloudinary).
 const uploadImageArticle = async (req, res) => {
     // Setting multer
 
@@ -210,7 +193,6 @@ const uploadImageArticle = async (req, res) => {
         // Find and update that article
         Article.findOneAndUpdate(
             { _id: articleId },
-            //{ image: req.file.filename },
             { image: req.file.path },
             { new: true },
             (error, articleUpdated) => {
@@ -220,9 +202,6 @@ const uploadImageArticle = async (req, res) => {
                         message: 'Article not updated!.',
                     });
                 }
-
-                //console.log(req.file)
-                //return res.json(req.file)
                 // Return response
                 return res.status(200).json({
                     status: 'success',
@@ -234,12 +213,10 @@ const uploadImageArticle = async (req, res) => {
     }
 };
 
+// Get and Image by Id. It is not working anymore, because the images are not saved in the backend. Now the images are saved in Cloudinary.
 const getImage = (req, res) => {
     let file = req.params.file;
     console.log(file);
-    //let imagePath = path.join(__dirname, '../../images/articles/', file); // + file;
-    //let imagePath = '../../images/articles/' + file;
-    //let imagePath = path.join('images', 'articles', file);
     let imagePath = path.join(
         __dirname,
         '..',
@@ -255,10 +232,6 @@ const getImage = (req, res) => {
             //return res.sendFile(imagePath);
             console.log('ex' + path.resolve(imagePath));
             return res.sendFile(path.resolve(imagePath));
-            /*return res.status(200).json({
-                status: 'success',
-                file: imagePath,
-            });*/
         } else {
             return res.status(400).json({
                 status: 'error',
@@ -271,17 +244,19 @@ const getImage = (req, res) => {
     });
 };
 
+// Search and Article by ID.
 const searchArticle = (req, res) => {
     // Get search string
     let search = req.params.search;
 
     // Find OR
-
     Article.find({
+        // prettier-ignore
         '$or': [
             { 'title': { '$regex': search, '$options': 'i' } },
             { 'content': { '$regex': search, '$options': 'i' } },
         ],
+        // pretier-ignore
     })
         .sort({ date: -1 })
         .exec((error, articlesFound) => {

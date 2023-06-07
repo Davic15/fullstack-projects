@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, Navigate } from 'react-router-dom';
+import { Routes, Route, BrowserRouter } from 'react-router-dom';
 import { Header } from '../components/layout/Header';
 import { Navigation } from '../components/layout/Navigation';
 import { Home } from '../components/pages/Home';
@@ -38,9 +38,8 @@ export const BlogRoutes = () => {
                     />
                 </Routes>
             </section>
-
-            <Footer />
             <SideBar />
+            <Footer />
         </BrowserRouter>
     );
 };
