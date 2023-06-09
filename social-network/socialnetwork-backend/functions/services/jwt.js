@@ -2,7 +2,7 @@ const jwt = require('jwt-simple');
 const moment = require('moment');
 
 // Import secret Password
-const secret = process.env.MySocialNetworkSuperNice;
+const secret = process.env.SECRET_PASSWORD;
 
 // Create token
 const createToken = (user) => {

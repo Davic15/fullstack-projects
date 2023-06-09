@@ -5,8 +5,8 @@ const cors = require('cors');
 const connection = require('../src/database/connection');
 
 const userRoutes = require('./routes/user');
-const publicationRoutes = require('./routes/publication');
-const followRoutes = require('./routes/follow');
+//const publicationRoutes = require('./routes/publication');
+//const followRoutes = require('./routes/follow');
 
 require('dotenv').config();
 
