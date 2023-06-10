@@ -5,8 +5,8 @@ const cors = require('cors');
 const connection = require('../src/database/connection');
 
 const userRoutes = require('./routes/user');
-//const publicationRoutes = require('./routes/publication');
-//const followRoutes = require('./routes/follow');
+const publicationRoutes = require('./routes/publication');
+const followRoutes = require('./routes/follow');
 
 require('dotenv').config();
 
@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: true }));
 
 // Load Routes
 app.use('/.netlify/functions/api/user', userRoutes);
-//app.use('/.netlify/functions/api/publication', publicationRoutes);
-//app.use('/.netlify/functions/api/follow', followRoutes);
+app.use('/.netlify/functions/api/publication', publicationRoutes);
+app.use('/.netlify/functions/api/follow', followRoutes);
 
 module.exports.handler = serverless(app);

@@ -26,7 +26,7 @@ const UserSchema = Schema({
     image: {
         type: String,
         default:
-            'https://res.cloudinary.com/dccsb07gm/image/upload/v1686226470/social/default_snquiq.jpg',
+            'https://res.cloudinary.com/dccsb07gm/image/upload/v1686423713/social/avatars/default_cr1nol.jpg',
     },
     created_at: {
         type: Date,

@@ -2,9 +2,7 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
-
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
-
 const UserController = require('../controllers/user');
 const check = require('../middleware/auth');
 
@@ -17,7 +15,7 @@ cloudinary.config({
 const storage = new CloudinaryStorage({
     cloudinary: cloudinary,
     params: {
-        folder: 'social',
+        folder: 'social/avatars',
     },
 });
 
