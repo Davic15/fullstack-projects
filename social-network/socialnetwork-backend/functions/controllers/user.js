@@ -1,11 +1,13 @@
 const bcrypt = require('bcrypt');
 const mongoosePagination = require('mongoose-pagination');
+const { ObjectId } = require('mongodb');
 const fs = require('fs');
 const path = require('path');
 
 // Import models
 const User = require('../models/user');
 const Follow = require('../models/follow');
+const Publication = require('../models/publication');
 
 // Import services
 const jwt = require('../services/jwt');
@@ -93,6 +95,7 @@ const registerUser = (req, res) => {
     });
 };
 
+// Login user
 const loginUser = (req, res) => {
     // Get data from body
     let params = req.body;
@@ -138,6 +141,7 @@ const loginUser = (req, res) => {
     });
 };
 
+// Profile user
 const profileUser = (req, res) => {
     // Get data (ID) from the url
     const id = req.params.id;
@@ -169,6 +173,7 @@ const profileUser = (req, res) => {
         });
 };
 
+// List user
 const listUser = (req, res) => {
     // Check the current page
     let page = 1;
@@ -209,6 +214,7 @@ const listUser = (req, res) => {
         });
 };
 
+// Update User Information
 const updateUser = (req, res) => {
     // Get data from the body to update
     let userIdentity = req.user;
@@ -283,7 +289,113 @@ const updateUser = (req, res) => {
     });
 };
 
-const uploadPhotoUser = (req, res) => {};
+// Upload Avatar to cloudinary
+const uploadAvatarUser = (req, res) => {
+    // Get the file and check if the file exist.
+    if (!req.file) {
+        return res.status(404).send({
+            status: 'error',
+            message: 'Image not found!.',
+        });
+    }
+
+    // Get file name
+    let image = req.file.originalname;
+    console.log(image);
+
+    // Get the extension
+    // In the blog, only . is required
+    const imageSplit = image.split('.');
+    const extension = imageSplit[1];
+
+    // Check the extension
+    if (
+        extension != 'png' &&
+        extension != 'jpg' &&
+        extension != 'jpeg' &&
+        extension != 'gif'
+    ) {
+        // Return a negative response
+        return res.status(400).send({
+            status: 'error',
+            message: 'Image not valid!.',
+        });
+    }
+
+    // If the extension is correct, save the url to the database
+    let userId = new ObjectId(req.user.id);
+    console.log(userId);
+    User.findOneAndUpdate(
+        { _id: userId },
+        //{ image: req.file.filename },
+        { image: req.file.path },
+        { new: true },
+        (error, userUpdated) => {
+            if (error || !userUpdated) {
+                return res.status(500).send({
+                    status: 'error',
+                    message: 'Error trying to upload the new avatar!.',
+                });
+            }
+            // Return response OK
+            return res.status(200).send({
+                status: 'success',
+                user: userUpdated,
+                file: req.file,
+            });
+        }
+    );
+};
+
+// Get Avatar's User
+const displayAvatarUser = (req, res) => {
+    // Get parameter from URL
+    const userId = new ObjectId(req.params.user);
+
+    // Search if the user exists
+    User.findById(userId, (error, userAvatar) => {
+        // Error if the user doesn't exist
+        if (error || !userAvatar) {
+            return res.status(404).json({
+                status: 'error',
+                message: 'No user was found!.',
+                id: userId,
+            });
+        }
+        return res.status(200).json({
+            status: 'success',
+            message: 'Avatar found!.',
+            avatarImage: userAvatar.image,
+        });
+    });
+};
+
+// Counters User
+const countersUser = async (req, res) => {
+    let userId = req.user.id;
+
+    if (req.params.id) {
+        userId = req.params.id;
+    }
+    console.log(userId);
+    try {
+        const following = await Follow.count({ user: userId });
+        const followed = await Follow.count({ followed: userId });
+        const publications = await Publication.count({ user: userId });
+        return res.status(200).send({
+            userId,
+            following: following,
+            followed: followed,
+            publications: publications,
+        });
+    } catch (error) {
+        return res.status(500).send({
+            status: 'error',
+            message: 'Counter error!.',
+            error,
+        });
+    }
+};
 
 module.exports = {
     testUser,
@@ -292,5 +404,7 @@ module.exports = {
     profileUser,
     listUser,
     updateUser,
-    uploadPhotoUser,
+    uploadAvatarUser,
+    displayAvatarUser,
+    countersUser,
 };

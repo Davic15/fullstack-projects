@@ -42,7 +42,9 @@ router.put('/update', check.auth, UserController.updateUser);
 router.post(
     '/upload',
     [check.auth, upload.single('picture')],
-    UserController.uploadPhotoUser
+    UserController.uploadAvatarUser
 );
+router.get('/avatar/:user', UserController.displayAvatarUser);
+router.get('/counters/:id', check.auth, UserController.countersUser);
 
 module.exports = router;
