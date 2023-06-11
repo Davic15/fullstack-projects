@@ -2,7 +2,7 @@ const { ObjectId } = require('mongodb');
 
 // Import model
 const Follow = require('../models/follow');
-const User = require('../models/follow');
+const User = require('../models/user');
 
 // Import Service
 const followService = require('../services/followService');

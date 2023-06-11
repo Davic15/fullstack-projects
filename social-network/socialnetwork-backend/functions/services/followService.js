@@ -1,25 +1,29 @@
 const Follow = require('../models/follow');
 
-// prettier-ignore
 const followUserIds = async (identityUserId) => {
     try {
-        // Get following information
+        // Get following IDs
+        // prettier-ignore
         let following = await Follow.find({ 'user': identityUserId })
             .select({ 'followed': 1, '_id': 0 })
-            .exe();
-
+            .exec();
+        // prettier-ignore
+        // prettier-ignore
         let followers = await Follow.find({ 'followed': identityUserId })
             .select({ 'user': 1, '_id': 0 })
             .exec();
+        // prettier-ignore
 
-        // Process ID arrays
+        // Proccess Id array
         let followingClean = [];
-        following.forEach(follow => {
+
+        following.forEach((follow) => {
             followingClean.push(follow.followed);
         });
 
         let followersClean = [];
-        followers.forEach(follow => {
+
+        followers.forEach((follow) => {
             followersClean.push(follow.user);
         });
 
@@ -31,27 +35,25 @@ const followUserIds = async (identityUserId) => {
         return {};
     }
 };
-// prettier-ignore
 
-// prettier-ignore
 const followThisUser = async (identityUserId, profileUserId) => {
-    // Get following data
-    let following = await Follow.findOne({
-        'user': identityUserId,
-        'followed': profileUserId,
-    });
-
-    let follower = await Follow.findOne({
-        'user': profileUserId,
-        'followed': identityUserId,
-    });
+    // Sacar info seguimiento
+    let following = await Follow.findOne(
+        // prettier-ignore
+        { 'user': identityUserId, 'followed': profileUserId }
+    );
+    // prettier-ignore
+    let follower = await Follow.findOne(
+        // prettier-ignore
+        { 'user': profileUserId, 'followed': identityUserId });
+    // prettier-ignore
 
     return {
         following,
-        follower,
+        follower
     };
 };
-// prettier-ignore
+
 module.exports = {
     followUserIds,
     followThisUser,
