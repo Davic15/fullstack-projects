@@ -1,3 +1,4 @@
 export const Global = {
-    url: 'http://localhost:8888/.netlify/functions/api/',
+    urlLocal: 'http://localhost:8888/.netlify/functions/api/',
+    url: 'https://socialnetwork-backend.netlify.app/.netlify/functions/api/',
 };

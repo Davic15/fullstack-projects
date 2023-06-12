@@ -18,5 +18,5 @@ export const Logout = () => {
         navigate('/login');
     });
 
-    return <h1>logout</h1>;
+    return <h1>Logging out...</h1>;
 };

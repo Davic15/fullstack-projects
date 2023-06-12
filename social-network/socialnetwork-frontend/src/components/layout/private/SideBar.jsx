@@ -2,11 +2,14 @@ import React, { useEffect, useState } from 'react';
 import avatar from '../../../assets/img/user.png';
 import { Global } from '../../../helpers/Global';
 import useAuth from '../../../hooks/useAuth';
+import { Link } from 'react-router-dom';
+import { useForm } from '../../../hooks/useForm';
 
 export const SideBar = () => {
     const { auth, counters } = useAuth();
     const [avatarUser, setAvatarUser] = useState('');
-    console.log(auth, counters);
+    const { form, changed } = useForm({});
+    const [stored, setStored] = useState('not_stored');
 
     useEffect(() => {
         getAvatar();
@@ -14,16 +17,81 @@ export const SideBar = () => {
 
     // Get the user avatar.
     const getAvatar = async () => {
-        const request = await fetch(Global.url + 'user/avatar/' + auth._id, {
-            method: 'GET',
-        });
+        if (auth.image !== undefined) {
+            const request = await fetch(
+                Global.url + 'user/avatar/' + auth._id,
+                {
+                    method: 'GET',
+                }
+            );
 
-        const data = await request.json();
-        if (data.status === 'success') {
-            setAvatarUser(data.avatarImage);
-        } else {
-            setAvatarUser(auth.image);
+            const data = await request.json();
+            if (data.status === 'success') {
+                setAvatarUser(data.avatarImage);
+            } else {
+                setAvatarUser(auth.image);
+            }
         }
+    };
+
+    const savePublication = async (e) => {
+        e.preventDefault();
+
+        // Get data from the form
+        let newPublication = form;
+        newPublication.user = auth._id;
+
+        // Request to save
+        const request = await fetch(Global.url + 'publication/save', {
+            method: 'POST',
+            body: JSON.stringify(newPublication),
+            headers: {
+                // prettier-ignore
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token'),
+                // prettier-ignore
+            },
+        });
+        const data = await request.json();
+
+        // Check errors
+        if (data.status === 'success') {
+            setStored('stored');
+        } else {
+            setStored('error');
+        }
+
+        // Upload Image
+        const fileInput = document.querySelector('#picture');
+        if (data.status === 'success' && fileInput.files[0]) {
+            const formData = new FormData();
+            formData.append('picture', fileInput.files[0]);
+
+            const uploadRequest = await fetch(
+                Global.url + 'publication/upload/' + data.publicationStored._id,
+                {
+                    method: 'POST',
+                    body: formData,
+                    headers: {
+                        // prettier-ignore
+                        //'Content-Type': 'application/json',
+                        'Authorization': localStorage.getItem('token'),
+                        // prettier-ignore
+                    },
+                }
+            );
+            const uploadData = await uploadRequest.json();
+            console.log(uploadData);
+            if (uploadData.status === 'success') {
+                setStored('stored');
+            } else {
+                setStored('error');
+            }
+        }
+        //if (data.status === 'success' && uploadData.status === 'success') {
+        const myForm = document.querySelector('#publication-form');
+        myForm.reset();
+        //}
     };
 
     return (
@@ -43,9 +111,12 @@ export const SideBar = () => {
                             />
                         </div>
                         <div className='general-info__container-names'>
-                            <a href='#' className='container-names__name'>
+                            <Link
+                                to={'/social/profile/' + auth._id}
+                                className='container-names__name'
+                            >
                                 {auth.name} {auth.surname}
-                            </a>
+                            </Link>
                             <p className='container-names__nickname'>
                                 {auth.nick}
                             </p>
@@ -54,65 +125,94 @@ export const SideBar = () => {
 
                     <div className='profile-info__stats'>
                         <div className='stats__following'>
-                            <a href='#' className='following__link'>
+                            <Link
+                                to={'/social/following/' + auth._id}
+                                className='following__link'
+                            >
                                 <span className='following__title'>
                                     Following
                                 </span>
                                 <span className='following__number'>
                                     {counters.following}
                                 </span>
-                            </a>
+                            </Link>
                         </div>
                         <div className='stats__following'>
-                            <a href='#' className='following__link'>
+                            <Link
+                                to={'/social/followers/' + auth._id}
+                                className='following__link'
+                            >
                                 <span className='following__title'>
                                     Followers
                                 </span>
                                 <span className='following__number'>
                                     {counters.followed}
                                 </span>
-                            </a>
+                            </Link>
                         </div>
 
                         <div className='stats__following'>
-                            <a href='#' className='following__link'>
+                            <Link
+                                to={'/social/profile/' + auth._id}
+                                className='following__link'
+                            >
                                 <span className='following__title'>
                                     Publications
                                 </span>
                                 <span className='following__number'>
                                     {counters.publications}
                                 </span>
-                            </a>
+                            </Link>
                         </div>
                     </div>
                 </div>
 
                 <div className='aside__container-form'>
-                    <form className='container-form__form-post'>
+                    {stored === 'stored' ? (
+                        <strong className='alert alert-success'>
+                            Post published
+                        </strong>
+                    ) : (
+                        ''
+                    )}
+                    {stored === 'error' ? (
+                        <strong className='alert alert-danger'>
+                            Post not published
+                        </strong>
+                    ) : (
+                        ''
+                    )}
+                    <form
+                        className='container-form__form-post'
+                        onSubmit={savePublication}
+                        id='publication-form'
+                    >
                         <div className='form-post__inputs'>
-                            <label htmlFor='post' className='form-post__label'>
+                            <label htmlFor='text' className='form-post__label'>
                                 What are you doing?
                             </label>
                             <textarea
-                                name='post'
+                                name='text'
+                                id='text'
                                 className='form-post__textarea'
-                            ></textarea>
+                                onChange={changed}
+                            />
                         </div>
                         <div className='form-post__inputs'>
-                            <label htmlFor='image' className='form-post__label'>
-                                Upload your photo
+                            <label htmlFor='file0' className='form-post__label'>
+                                Upload post image
                             </label>
                             <input
                                 type='file'
-                                name='image'
+                                name='file0'
+                                id='picture'
                                 className='form-post__image'
                             />
                         </div>
                         <input
                             type='submit'
-                            value='Enviar'
+                            value='Send'
                             className='form-post__btn-submit'
-                            disabled
                         />
                     </form>
                 </div>

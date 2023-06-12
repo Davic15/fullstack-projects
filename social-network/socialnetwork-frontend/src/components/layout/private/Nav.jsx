@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink } from 'react-router-dom';
-import avatar from '../../../assets/img/user.png';
 import useAuth from '../../../hooks/useAuth';
 import { Global } from '../../../helpers/Global';
 
@@ -15,15 +14,20 @@ export const Nav = () => {
 
     // Get the user avatar.
     const getAvatar = async () => {
-        const request = await fetch(Global.url + 'user/avatar/' + auth._id, {
-            method: 'GET',
-        });
+        if (auth.image !== undefined) {
+            const request = await fetch(
+                Global.url + 'user/avatar/' + auth._id,
+                {
+                    method: 'GET',
+                }
+            );
 
-        const data = await request.json();
-        if (data.status === 'success') {
-            setAvatarUser(data.avatarImage);
-        } else {
-            setAvatarUser(auth.image);
+            const data = await request.json();
+            if (data.status === 'success') {
+                setAvatarUser(data.avatarImage);
+            } else {
+                setAvatarUser(auth.image);
+            }
         }
     };
 
@@ -54,18 +58,24 @@ export const Nav = () => {
 
             <ul className='container-lists__list-end'>
                 <li className='list-end__item'>
-                    <a href='#' className='list-end__link-image'>
+                    <NavLink
+                        to={'/social/profile/' + auth._id}
+                        className='list-end__link-image'
+                    >
                         <img
                             src={avatarUser}
                             className='list-end__img'
                             alt='profile picture'
                         />
-                    </a>
+                    </NavLink>
                 </li>
                 <li className='list-end__item'>
-                    <a href='#' className='list-end__link'>
+                    <NavLink
+                        to={'/social/profile/' + auth._id}
+                        className='list-end__link'
+                    >
                         <span className='list-end__name'>{auth.nick}</span>
-                    </a>
+                    </NavLink>
                 </li>
                 <li className='list-end__item'>
                     <NavLink to='/social/config' className='list-end__link'>

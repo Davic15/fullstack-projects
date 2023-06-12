@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route, BrowserRouter, Navigate, Link } from 'react-router-dom';
+import { Routes, Route, BrowserRouter, Link } from 'react-router-dom';
 
 import { AuthProvider } from '../context/AuthProvider';
 import { PublicLayout } from '../components/layout/public/PublicLayout';
@@ -10,6 +10,9 @@ import { Feed } from '../components/publication/Feed';
 import { Logout } from '../components/user/Logout';
 import { Config } from '../components/user/Config';
 import { People } from '../components/user/People';
+import { Following } from '../components/follow/Following';
+import { Followers } from '../components/follow/Followers';
+import { Profile } from '../components/user/Profile';
 
 export const Routing = () => {
     return (
@@ -27,6 +30,15 @@ export const Routing = () => {
                         <Route path='logout' element={<Logout />} />
                         <Route path='people' element={<People />} />
                         <Route path='config' element={<Config />} />
+                        <Route
+                            path='following/:userId'
+                            element={<Following />}
+                        />
+                        <Route
+                            path='followers/:userId'
+                            element={<Followers />}
+                        />
+                        <Route path='profile/:userId' element={<Profile />} />
                     </Route>
                     <Route
                         path='*'

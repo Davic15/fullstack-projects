@@ -64,7 +64,9 @@ export const Config = () => {
                 method: 'POST',
                 body: formData,
                 headers: {
-                    authorization: authorizationToken,
+                    // prettier-ignore
+                    'Authorization': authorizationToken,
+                    // prettier-ignore
                 },
             });
             const uploadData = await uploadRequest.json();

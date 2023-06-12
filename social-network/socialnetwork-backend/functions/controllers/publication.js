@@ -170,7 +170,7 @@ const uploadImagePublication = (req, res) => {
     // If the extension is good, save in the data base
     Publication.findOneAndUpdate(
         // prettier-ignore
-        { 'user': req.user.id, '_id': publicationId},
+        { user: req.user.id, _id: publicationId},
         { file: req.file.path },
         { new: true },
         // prettier-ignore

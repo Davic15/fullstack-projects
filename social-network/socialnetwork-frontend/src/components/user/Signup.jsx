@@ -34,14 +34,14 @@ export const Signup = () => {
             </header>
 
             <div className='content__posts'>
-                {saved == 'saved' ? (
+                {saved === 'saved' ? (
                     <strong className='alert alert-success'>
                         User Registered
                     </strong>
                 ) : (
                     ''
                 )}
-                {saved == 'error' ? (
+                {saved === 'error' ? (
                     <strong className='alert alert-danger'>
                         User was not registed
                     </strong>

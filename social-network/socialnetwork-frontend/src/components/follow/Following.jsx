@@ -1,33 +1,51 @@
 import React, { useEffect, useState } from 'react';
 import { Global } from '../../helpers/Global';
-import { UserList } from './UserList';
+import { UserList } from '../user/UserList';
+import { useParams } from 'react-router-dom';
+import { GetProfile } from '../../helpers/GetProfile';
 
-export const People = () => {
+export const Following = () => {
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [page, setPage] = useState(1);
     const [more, setMore] = useState(true);
     const [following, setFollowing] = useState([]);
     const [loadingUser, setLoadingUser] = useState(true);
+    const params = useParams();
+    const [userProfile, setUserProfile] = useState({});
 
     useEffect(() => {
         getUsers(1);
+        GetProfile(params.userId, setUserProfile);
     }, []);
 
     const getUsers = async (nextPage = 1) => {
         setLoadingUser(true);
+
+        // Get the userId
+        const userId = params.userId;
+
         //* Request
-        const request = await fetch(Global.url + 'user/list/' + nextPage, {
-            method: 'GET',
-            headers: {
-                // prettier-ignore
-                'Content-Type': 'application/json',
-                'Authorization': localStorage.getItem('token'),
-                // prettier-ignore
-            },
-        });
+        const request = await fetch(
+            Global.url + 'follow/following/' + userId + '/' + nextPage,
+            {
+                method: 'GET',
+                headers: {
+                    // prettier-ignore
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token'),
+                    // prettier-ignore
+                },
+            }
+        );
         const data = await request.json();
-        console.log(data);
+
+        // Loop and clean follows
+        let cleanUsers = [];
+        data.follows.forEach((follow) => {
+            cleanUsers = [...cleanUsers, follow.followed];
+        });
+        data.users = cleanUsers;
 
         //* Create state to list them
         if (data.users && data.status === 'success') {
@@ -52,7 +70,9 @@ export const People = () => {
     return (
         <>
             <header className='content__header'>
-                <h1 className='content__title'>People</h1>
+                <h1 className='content__title'>
+                    Users you follow as {userProfile.name} {userProfile.surname}
+                </h1>
             </header>
             <UserList
                 users={users}
