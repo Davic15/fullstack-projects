@@ -10,14 +10,34 @@ export const SideBar = () => {
     const [avatarUser, setAvatarUser] = useState('');
     const { form, changed } = useForm({});
     const [stored, setStored] = useState('not_stored');
+    const [count, setCount] = useState({});
 
     useEffect(() => {
         getAvatar();
     }, [auth.image]);
 
     useEffect(() => {
-        getAvatar();
-    }, [counters]);
+        getCounters();
+    }, [count]);
+
+    const getCounters = async () => {
+        const request = await fetch(
+            Global.url + 'user/counters/' + params.userId,
+            {
+                method: 'GET',
+                headers: {
+                    // prettier-ignore
+                    'Content-Type': 'application/json',
+                    'Authorization': localStorage.getItem('token'),
+                    // prettier-ignore
+                },
+            }
+        );
+        const data = await request.json();
+        if (data.following) {
+            setCount(data);
+        }
+    };
 
     // Get the user avatar.
     const getAvatar = async () => {
@@ -140,7 +160,7 @@ export const SideBar = () => {
                                     Following
                                 </span>
                                 <span className='following__number'>
-                                    {counters.following}
+                                    {count.following}
                                 </span>
                             </Link>
                         </div>
@@ -153,7 +173,7 @@ export const SideBar = () => {
                                     Followers
                                 </span>
                                 <span className='following__number'>
-                                    {counters.followed}
+                                    {count.followed}
                                 </span>
                             </Link>
                         </div>
@@ -165,7 +185,7 @@ export const SideBar = () => {
                             >
                                 <span className='following__title'>Posts</span>
                                 <span className='following__number'>
-                                    {counters.publications}
+                                    {count.publications}
                                 </span>
                             </Link>
                         </div>
