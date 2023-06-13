@@ -27,7 +27,6 @@ export const People = () => {
             },
         });
         const data = await request.json();
-        console.log(data);
 
         //* Create state to list them
         if (data.users && data.status === 'success') {
@@ -40,7 +39,6 @@ export const People = () => {
             setFollowing(data.user_following);
             setLoading(false);
             setLoadingUser(false);
-            console.log(data.user_following);
 
             //* Pagination
             if (users.length >= data.total - data.users.length) {

@@ -16,7 +16,6 @@ export const UserList = ({
 }) => {
     const { auth } = useAuth();
     const follow = async (userId) => {
-        console.log(userId);
         //* Save Follow in the backed
         const request = await fetch(Global.url + 'follow/save', {
             method: 'POST',
@@ -29,7 +28,6 @@ export const UserList = ({
             },
         });
         const data = await request.json();
-        console.log(data);
         //* Check if correct
         if (data.status === 'success') {
             //* Update the following.
@@ -38,7 +36,6 @@ export const UserList = ({
     };
 
     const unfollow = async (id) => {
-        console.log(id);
         //* Save Follow in the backed
         const request = await fetch(Global.url + 'follow/unfollow/' + id, {
             method: 'DELETE',

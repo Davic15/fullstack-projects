@@ -65,17 +65,26 @@ export const PublicationList = ({
 
                                 <div className='post__body'>
                                     <div className='post__user-info'>
-                                        <a href='#' className='user-info__name'>
+                                        <Link
+                                            to={
+                                                '/social/profile/' +
+                                                publication.user._id
+                                            }
+                                            className='user-info__name'
+                                        >
                                             {publication.user.name +
                                                 ' ' +
                                                 publication.user.surname}
-                                        </a>
+                                        </Link>
                                         <span className='user-info__divider'>
                                             {' '}
                                             |{' '}
                                         </span>
-                                        <a
-                                            href='#'
+                                        <Link
+                                            to={
+                                                '/social/profile/' +
+                                                publication.user._id
+                                            }
                                             className='user-info__create-date'
                                         >
                                             <ReactTimeAgo
@@ -86,7 +95,7 @@ export const PublicationList = ({
                                                 }
                                                 locale='en-US'
                                             />
-                                        </a>
+                                        </Link>
                                     </div>
                                     <h4 className='post__content'>
                                         {publication.text}

@@ -11,13 +11,13 @@ export const SideBar = () => {
     const { form, changed } = useForm({});
     const [stored, setStored] = useState('not_stored');
 
-    /*useEffect(() => {
+    useEffect(() => {
         getAvatar();
-    }, [auth.image]);*/
+    }, [auth.image]);
 
     useEffect(() => {
         getAvatar();
-    }, [auth]);
+    }, [counters]);
 
     // Get the user avatar.
     const getAvatar = async () => {
