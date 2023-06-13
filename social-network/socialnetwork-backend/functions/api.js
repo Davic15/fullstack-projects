@@ -2,6 +2,10 @@ const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
 
+const userRoutes = require('./routes/user');
+const publicationRoutes = require('./routes/publication');
+const followRoutes = require('./routes/follow');
+
 require('dotenv').config();
 const connection = require('../src/database/connection');
 
@@ -38,10 +42,6 @@ app.use((req, res, next) => {
     );
     next();
 });*/
-
-const userRoutes = require('./routes/user');
-const publicationRoutes = require('./routes/publication');
-const followRoutes = require('./routes/follow');
 
 app.use(function (req, res, next) {
     const allowedHosts = [
