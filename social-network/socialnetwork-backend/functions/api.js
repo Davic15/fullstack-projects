@@ -15,9 +15,9 @@ connection();
 const app = express();
 
 // Cors configurarion
-//app.use(cors());
+app.use(cors());
 
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
     //* * all domains or specific domain
     res.setHeader('Access-Control-Allow-Origin', '*');
     res.setHeader(
@@ -29,7 +29,7 @@ app.use((req, res, next) => {
         'Content-Type, Authorization'
     );
     next();
-});
+});*/
 /*app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
