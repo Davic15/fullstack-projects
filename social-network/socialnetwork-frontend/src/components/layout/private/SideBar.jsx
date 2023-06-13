@@ -18,7 +18,7 @@ export const SideBar = () => {
 
     useEffect(() => {
         getCounters();
-    }, [count]);
+    }, [count, counters]);
 
     const getCounters = async () => {
         const request = await fetch(
