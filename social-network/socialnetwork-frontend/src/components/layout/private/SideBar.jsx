@@ -16,11 +16,11 @@ export const SideBar = () => {
         getAvatar();
     }, [auth.image]);
 
-    /*useEffect(() => {
+    useEffect(() => {
         getCounters();
-    }, [counters, stored]);*/
+    }, [counters, stored]);
 
-    /*const getCounters = async () => {
+    const getCounters = async () => {
         const request = await fetch(Global.url + 'user/counters/' + auth._id, {
             method: 'GET',
             headers: {
@@ -34,7 +34,7 @@ export const SideBar = () => {
         if (data.following) {
             setCounters(data);
         }
-    };*/
+    };
 
     // Get the user avatar.
     const getAvatar = async () => {
