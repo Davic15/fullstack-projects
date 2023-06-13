@@ -6,7 +6,7 @@ import { Link } from 'react-router-dom';
 import { useForm } from '../../../hooks/useForm';
 
 export const SideBar = () => {
-    const { auth, counters } = useAuth();
+    const { auth, counters, setCounters } = useAuth();
     const [avatarUser, setAvatarUser] = useState('');
     const { form, changed } = useForm({});
     const [stored, setStored] = useState('not_stored');
@@ -18,7 +18,7 @@ export const SideBar = () => {
 
     useEffect(() => {
         getCounters();
-    }, [count, counters]);
+    }, [counters, stored]);
 
     const getCounters = async () => {
         const request = await fetch(Global.url + 'user/counters/' + auth._id, {
@@ -32,7 +32,7 @@ export const SideBar = () => {
         });
         const data = await request.json();
         if (data.following) {
-            setCount(data);
+            setCounters(data);
         }
     };
 
@@ -114,7 +114,6 @@ export const SideBar = () => {
         setTimeout(() => {
             setStored('not_stored');
         }, 1000);
-
         //}
     };
 
@@ -157,7 +156,7 @@ export const SideBar = () => {
                                     Following
                                 </span>
                                 <span className='following__number'>
-                                    {count.following}
+                                    {counters.following || 0}
                                 </span>
                             </Link>
                         </div>
@@ -170,7 +169,7 @@ export const SideBar = () => {
                                     Followers
                                 </span>
                                 <span className='following__number'>
-                                    {count.followed}
+                                    {counters.followed || 0}
                                 </span>
                             </Link>
                         </div>
@@ -182,7 +181,7 @@ export const SideBar = () => {
                             >
                                 <span className='following__title'>Posts</span>
                                 <span className='following__number'>
-                                    {count.publications}
+                                    {counters.publications || 0}
                                 </span>
                             </Link>
                         </div>
