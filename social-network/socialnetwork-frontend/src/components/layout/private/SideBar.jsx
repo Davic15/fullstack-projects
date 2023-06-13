@@ -21,18 +21,15 @@ export const SideBar = () => {
     }, [count, counters]);
 
     const getCounters = async () => {
-        const request = await fetch(
-            Global.url + 'user/counters/' + params.userId,
-            {
-                method: 'GET',
-                headers: {
-                    // prettier-ignore
-                    'Content-Type': 'application/json',
-                    'Authorization': localStorage.getItem('token'),
-                    // prettier-ignore
-                },
-            }
-        );
+        const request = await fetch(Global.url + 'user/counters/' + auth._id, {
+            method: 'GET',
+            headers: {
+                // prettier-ignore
+                'Content-Type': 'application/json',
+                'Authorization': localStorage.getItem('token'),
+                // prettier-ignore
+            },
+        });
         const data = await request.json();
         if (data.following) {
             setCount(data);
