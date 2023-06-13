@@ -24,10 +24,12 @@ export const Signup = () => {
         const data = await request.json();
         if (data.status === 'success') {
             setSaved('saved');
-            navigate('/login');
         } else {
             setSaved('error');
         }
+        setTimeout(() => {
+            navigate('/login');
+        }, 1000);
     };
 
     return (

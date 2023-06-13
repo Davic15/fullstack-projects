@@ -11,9 +11,13 @@ export const SideBar = () => {
     const { form, changed } = useForm({});
     const [stored, setStored] = useState('not_stored');
 
+    /*useEffect(() => {
+        getAvatar();
+    }, [auth.image]);*/
+
     useEffect(() => {
         getAvatar();
-    }, [auth.image]);
+    }, [auth]);
 
     // Get the user avatar.
     const getAvatar = async () => {
@@ -81,7 +85,6 @@ export const SideBar = () => {
                 }
             );
             const uploadData = await uploadRequest.json();
-            console.log(uploadData);
             if (uploadData.status === 'success') {
                 setStored('stored');
             } else {
@@ -91,6 +94,10 @@ export const SideBar = () => {
         //if (data.status === 'success' && uploadData.status === 'success') {
         const myForm = document.querySelector('#publication-form');
         myForm.reset();
+        setTimeout(() => {
+            setStored('not_stored');
+        }, 1000);
+
         //}
     };
 
@@ -156,9 +163,7 @@ export const SideBar = () => {
                                 to={'/social/profile/' + auth._id}
                                 className='following__link'
                             >
-                                <span className='following__title'>
-                                    Publications
-                                </span>
+                                <span className='following__title'>Posts</span>
                                 <span className='following__number'>
                                     {counters.publications}
                                 </span>
