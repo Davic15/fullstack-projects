@@ -2,10 +2,6 @@ const express = require('express');
 const serverless = require('serverless-http');
 const cors = require('cors');
 
-const userRoutes = require('./routes/user');
-const publicationRoutes = require('./routes/publication');
-const followRoutes = require('./routes/follow');
-
 require('dotenv').config();
 const connection = require('../src/database/connection');
 
@@ -19,8 +15,8 @@ connection();
 const app = express();
 
 // Cors configurarion
-app.use(cors());
-/*
+//app.use(cors());
+
 app.use((req, res, next) => {
     //* * all domains or specific domain
     res.setHeader('Access-Control-Allow-Origin', '*');
@@ -33,7 +29,7 @@ app.use((req, res, next) => {
         'Content-Type, Authorization'
     );
     next();
-});*/
+});
 /*app.use(function (req, res, next) {
     res.header('Access-Control-Allow-Origin', '*');
     res.header(
@@ -42,6 +38,10 @@ app.use((req, res, next) => {
     );
     next();
 });*/
+
+const userRoutes = require('./routes/user');
+const publicationRoutes = require('./routes/publication');
+const followRoutes = require('./routes/follow');
 
 app.use(function (req, res, next) {
     const allowedHosts = [
