@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { useForm } from '../../hooks/useForm';
 import { Global } from '../../helpers/Global';
+import { useNavigate } from 'react-router-dom';
 
 export const Signup = () => {
     const { form, changed } = useForm({});
     const [saved, setSaved] = useState('not_sent');
+    const navigate = useNavigate();
 
     const saveUser = async (e) => {
         e.preventDefault();
@@ -22,6 +24,7 @@ export const Signup = () => {
         const data = await request.json();
         if (data.status === 'success') {
             setSaved('saved');
+            navigate('/login');
         } else {
             setSaved('error');
         }

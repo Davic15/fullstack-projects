@@ -142,12 +142,13 @@ export const Config = () => {
                         <input type='password' name='password' />
                     </div>
                     <div className='form-group'>
-                        <label htmlFor='file0'>Avatar</label>
+                        <label htmlFor='avatar'>Avatar</label>
                         <div className='general-info__container-avatar'>
                             <img
                                 src={avatarUser}
                                 className='container-avatar__img'
                                 alt='profile picture'
+                                id='avatar'
                             />
                         </div>
                         <br />
